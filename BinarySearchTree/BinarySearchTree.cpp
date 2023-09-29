@@ -3,65 +3,67 @@
 
 using namespace std;
 
-node* createNode(node* tree, int value)
+
+BinaryTree::node* BinaryTree::create_node(node* root, int value)
 {
-	tree = new node();
-	tree->left = tree->right = nullptr;
-	tree->value = value;
-	return tree;
+	root = new node();
+	root->left = root->right = nullptr;
+	root->value = value;
+	return root;
 }
-node* insert_integer(struct node* tree, int value)
+BinaryTree::node* BinaryTree::insert_integer(node* root, int value)
 {
 
-	if (tree == nullptr)
+	if (root == nullptr)
 	{
-		tree = createNode(tree, value);		
+		root = create_node(root, value);		
 	}
 
-	else if (value > tree->value)
+	else if (value > root->value)
 	{
-		tree->right = insert_integer(tree->right, value);
+		root->right = insert_integer(root->right, value);
 	}
 	else
 	{
-		tree->left = insert_integer(tree->left, value);
+		root->left = insert_integer(root->left, value);
 	}
 
-	return tree;
+	return root;
 }
-void print_tree(struct node* tree)
+
+void BinaryTree::print_tree(struct node* root)
 {
-	if (tree == nullptr) return;
-	print_tree(tree->right);
-	cout << tree->value << " " << endl;
-	print_tree(tree->left);	
+	if (root == nullptr) return;
+	print_tree(root->right);
+	cout << root->value << " " << endl;
+	print_tree(root->left);	
 }
 
 
-void terminate_tree(struct node* tree)
+void BinaryTree::terminate_tree(struct node* root)
 {
-	if (tree == nullptr) return;
-	terminate_tree(tree->left);
-	terminate_tree(tree->right);
-	delete tree;
+	if (root == nullptr) return;
+	terminate_tree(root->left);
+	terminate_tree(root->right);
+	delete root;
 }
 
 
 
-int most_common_integer(struct node* tree, unordered_map<int,int> map)
+int BinaryTree::most_common_integer(struct node* root, unordered_map<int,int> map)
 {
 	//THIS DOES NOT WORK. RETURN AND FIX. 
-	most_common_integer(tree->left, map);
-	auto iter = map.find(tree->value);
+	most_common_integer(root->left, map);
+	auto iter = map.find(root->value);
 	if (iter == map.end())
 	{
-		map.emplace(tree->value, 1);
+		map.emplace(root->value, 1);
 	}
 	else
 	{
 		iter->second++;
 	}
-	most_common_integer(tree->left, map);
+	most_common_integer(root->left, map);
 	int currentBiggest = 0;
 	int commonNumber = 0;
 	for (auto it : map)
@@ -78,37 +80,37 @@ int most_common_integer(struct node* tree, unordered_map<int,int> map)
 
 
 
-int largest_integer(struct node* tree)
+int BinaryTree::largest_integer(struct node* root)
 {
-	while (tree->right != nullptr)
+	while (root->right != nullptr)
 	{
-		tree = tree->right;
+		root = root->right;
 	}
-	return tree->value;
+	return root->value;
 }
 
-int sum_of_all_integers(struct node* tree)
+int BinaryTree::sum_of_all_integers(struct node* root)
 {
-	if (tree == nullptr) return 0;
-	return tree->value + sum_of_all_integers(tree->right) + sum_of_all_integers(tree->left);
+	if (root == nullptr) return 0;
+	return root->value + sum_of_all_integers(root->right) + sum_of_all_integers(root->left);
 }
 
 int main()
 {
 	srand(time(NULL));
-	root = insert_integer(root, 1);
-	insert_integer(root,1);
-	insert_integer(root, rand() % 100);
-	insert_integer(root, rand() % 100);
-	insert_integer(root, rand() % 100);
-	insert_integer(root, rand() % 100);
-	insert_integer(root, rand() % 100);
-	insert_integer(root, rand() % 100);
-	print_tree(root);
-	cout << largest_integer(root) << endl;
-	cout << sum_of_all_integers(root) << endl;
-	cout << most_common_integer(root) << endl;
-	terminate_tree(root);
+	BinaryTree tree = BinaryTree(42);
+	tree.insert_integer(tree.get_root(), 1);
+	tree.insert_integer(tree.get_root(), rand() % 100);
+	tree.insert_integer(tree.get_root(), rand() % 100);
+	tree.insert_integer(tree.get_root(), rand() % 100);
+	tree.insert_integer(tree.get_root(), rand() % 100);
+	tree.insert_integer(tree.get_root(), rand() % 100);
+	tree.insert_integer(tree.get_root(), rand() % 100);
+	tree.print_tree(tree.get_root());
+	cout << tree.largest_integer(tree.get_root()) << endl;
+	cout << tree.sum_of_all_integers(tree.get_root()) << endl;
+	//cout << tree.most_common_integer(root) << endl;
+	tree.terminate_tree(tree.get_root());
 
 	return 0;
 }
